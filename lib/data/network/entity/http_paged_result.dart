@@ -6,8 +6,8 @@ part 'http_paged_result.g.dart'; // Certifique-se de gerar este arquivo
 @JsonSerializable()
 class HttpPagedResult {
   int first;
-  dynamic prev;
-  int next;
+  int? prev;
+  int? next;
   int last;
   int pages;
   int items;
@@ -15,8 +15,8 @@ class HttpPagedResult {
 
   HttpPagedResult({
     required this.first,
-    required this.prev,
-    required this.next,
+    this.prev,
+    this.next,
     required this.last,
     required this.pages,
     required this.items,
@@ -25,21 +25,13 @@ class HttpPagedResult {
 
   factory HttpPagedResult.fromJson(Map<String, dynamic> json) => _$HttpPagedResultFromJson(json);
 
-  Map<String, dynamic> toJson() => {
-    "first": first,
-    "prev": prev,
-    "next": next,
-    "last": last,
-    "pages": pages,
-    "items": items,
-    "data": List<dynamic>.from(data.map((x) => x.toJson())),
-  };
+  Map<String, dynamic> toJson() => _$HttpPagedResultToJson(this);
 }
 
 @JsonSerializable()
 class PokeEntity {
-  int id;
-  Name name;
+  dynamic id;
+  String name; // Mude o tipo de Name para String
   List<String> type;
   Base base;
 
@@ -50,19 +42,24 @@ class PokeEntity {
     required this.base,
   });
 
-  factory PokeEntity.fromJson(Map<String, dynamic> json) => _$PokeEntityFromJson(json);
+  factory PokeEntity.fromJson(Map<String, dynamic> json) {
+    return PokeEntity(
+      id: json['id'] is int ? json['id'] : int.parse(json['id'].toString()), // Garantir que seja um int
+      name: json['name']['english'] as String, // Extrair o nome em inglês diretamente
+      type: List<String>.from(json['type'].map((x) => x.toString())), // Convertendo para String
+      base: Base.fromJson(json['base']),
+    );
+  }
 
   Map<String, dynamic> toJson() => {
     "id": id,
-    "name": name.toJson(),
+    "name": {"english": name}, // Se você precisar retornar para o formato original
     "type": List<dynamic>.from(type.map((x) => x)),
     "base": base.toJson(),
   };
 
   @override
   String toString() {
-    return 'PokeEntity{id: $id, name: ${name.english}, type: $type}';
+    return 'PokeEntity{id: $id, name: $name, type: $type}'; // Alterado para usar name diretamente
   }
 }
-
-

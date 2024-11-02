@@ -28,8 +28,9 @@ class _PokeListPageState extends State<PokemonsListPage> {
           final poke = await pokeRepo.getPokemon(page: pageKey, limit: 10);
           // Adiciona a nova página ao controlador
           _pagingController.appendPage(poke, pageKey + 1);
-        } catch (e) {
-          // Em caso de erro, atribui o erro ao controlador
+        } catch (e, stackTrace) {
+          print('Erro: $e');
+          print('Stack Trace: $stackTrace');
           _pagingController.error = e;
         }
       },

@@ -17,7 +17,7 @@ class Pokemon {
   @JsonKey(name: PokemonDatabaseContract.idColumn)
   final int  id;
   @JsonKey(name: PokemonDatabaseContract.nameColumn)
-  final Name name;
+  final String name;
   @JsonKey(name: PokemonDatabaseContract.typeColumn)
   final List<String> type;
   @JsonKey(name: PokemonDatabaseContract.baseColumn)
@@ -37,12 +37,19 @@ class Pokemon {
 // Modelo Base para estatísticas de batalha do Pokemon
 @JsonSerializable()
 class Base {
+  @JsonKey(name: "HP")
   final int hp;
+  @JsonKey(name: "Attack")
   final int attack;
+  @JsonKey(name: "Defense")
   final int defense;
+  @JsonKey(name: "Sp. Attack")
   final int spAttack;
+  @JsonKey(name: "Sp. Defense")
   final int spDefense;
+  @JsonKey(name: "Speed")
   final int speed;
+
 
   Base({
     required this.hp,

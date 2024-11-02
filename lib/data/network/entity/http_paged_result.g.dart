@@ -9,8 +9,8 @@ part of 'http_paged_result.dart';
 HttpPagedResult _$HttpPagedResultFromJson(Map<String, dynamic> json) =>
     HttpPagedResult(
       first: (json['first'] as num).toInt(),
-      prev: json['prev'],
-      next: (json['next'] as num).toInt(),
+      prev: (json['prev'] as num?)?.toInt(),
+      next: (json['next'] as num?)?.toInt(),
       last: (json['last'] as num).toInt(),
       pages: (json['pages'] as num).toInt(),
       items: (json['items'] as num).toInt(),
@@ -31,8 +31,8 @@ Map<String, dynamic> _$HttpPagedResultToJson(HttpPagedResult instance) =>
     };
 
 PokeEntity _$PokeEntityFromJson(Map<String, dynamic> json) => PokeEntity(
-      id: (json['id'] as num).toInt(),
-      name: Name.fromJson(json['name'] as Map<String, dynamic>),
+      id: json['id'],
+      name: json['name'] as String,
       type: (json['type'] as List<dynamic>).map((e) => e as String).toList(),
       base: Base.fromJson(json['base'] as Map<String, dynamic>),
     );
