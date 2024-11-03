@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex/core/config_providers.dart';
+import 'package:pokedex/ui/page/home_screen.dart';
 import 'package:pokedex/ui/page/pokemon_list_view.dart';
 import 'package:provider/provider.dart';
 
@@ -28,7 +29,7 @@ class AppRoot extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: const PokemonsListPage(),
+        home: const HomeScreen(),
       ),
     );
   }
