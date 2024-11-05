@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pokedex/ui/page/daily_page.dart';
+import 'package:pokedex/ui/page/my_pokemon_page.dart';
 import 'package:pokedex/ui/page/pokemon_list_view.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -73,6 +75,10 @@ class HomeScreen extends StatelessWidget {
                 buildDecoratedButton(
                   'Encontro Diário',
                       () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const DailyPokemonPage()),
+                      );
 
                   },
                 ),
@@ -80,6 +86,10 @@ class HomeScreen extends StatelessWidget {
                 buildDecoratedButton(
                   'Meus Pokemons',
                       () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => CapturedPokemonsPage()),
+                        );
                     // Ação do botão "Meus Pokemons"
                   },
                 ),

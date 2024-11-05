@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:pokedex/data/database/entity/pokemon_database_entity.dart';
+import 'package:pokedex/data/database/dao/daily_service.dart'; // Importa o serviço para acessar os Pokémons capturados
 
 class PokemonDetailPage extends StatelessWidget {
   final Pokemon pokemon;
@@ -50,10 +51,37 @@ class PokemonDetailPage extends StatelessWidget {
                 _buildStatRow('Speed', pokemon.base.speed),
                 _buildStatRow('SpAttack', pokemon.base.spAttack),
                 _buildStatRow('SpDefense', pokemon.base.spDefense),
-
                 // Adicione mais atributos conforme necessário
               ],
             ),
+          ),
+          // Botão para soltar Pokémon
+          FutureBuilder<bool>(
+            future: _isPokemonCaptured(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              } else if (snapshot.hasError || !snapshot.data!) {
+                return SizedBox.shrink(); // Não exibe nada se não está capturado
+              } else {
+                return ElevatedButton(
+                  onPressed: () async {
+                    final success = await DailyPokemonService().releasePokemon(pokemon);
+                    if (success) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("${pokemon.name} solto com sucesso!"),
+                      ));
+                      Navigator.pop(context); // Volta para a lista após soltar
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("Erro ao soltar ${pokemon.name}."),
+                      ));
+                    }
+                  },
+                  child: Text("Soltar"),
+                );
+              }
+            },
           ),
         ],
       ),
@@ -71,5 +99,11 @@ class PokemonDetailPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  // Verifica se o Pokémon está capturado
+  Future<bool> _isPokemonCaptured() async {
+    final capturedPokemons = await DailyPokemonService().getCapturedPokemon();
+    return capturedPokemons.any((captured) => captured.id == pokemon.id);
   }
 }

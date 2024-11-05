@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex/core/config_providers.dart';
 import 'package:pokedex/ui/page/home_screen.dart';
-import 'package:pokedex/ui/page/pokemon_list_view.dart';
 import 'package:provider/provider.dart';
 
 
 Future<void> main() async{
   WidgetsFlutterBinding.ensureInitialized();
+
 
   final data = await ConfigureProviders.createDependencyTree();
 
