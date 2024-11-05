@@ -4,6 +4,7 @@ import 'package:pokedex/data/database/entity/pokemon_database_entity.dart';
 import 'package:pokedex/data/repository/poke_repository_Impl.dart';
 import 'package:pokedex/ui/widget/pokemoncard.dart';
 import 'package:provider/provider.dart';
+import 'package:pokedex/data/database/dao/daily_service.dart'; // Importe seu serviço de Pokémon
 
 class PokemonsListPage extends StatefulWidget {
   const PokemonsListPage({super.key});
@@ -53,7 +54,24 @@ class _PokeListPageState extends State<PokemonsListPage> {
       body: PagedListView<int, Pokemon>(
         pagingController: _pagingController,
         builderDelegate: PagedChildBuilderDelegate<Pokemon>(
-          itemBuilder: (context, pokemon, index) => PokemonCard(pokemon: pokemon),
+          itemBuilder: (context, pokemon, index) => PokemonCard(
+            pokemon: pokemon,
+            onRelease: () async {
+              // Chame a função para soltar o Pokémon
+              bool success = await DailyPokemonService().releasePokemon(pokemon);
+              if (success) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text("${pokemon.name} solto com sucesso!"),
+                ));
+                // Se necessário, atualize a lista ou remova o Pokémon da lista atual
+                // Você pode precisar reinicializar o PagingController aqui
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text("Erro ao soltar ${pokemon.name}."),
+                ));
+              }
+            },
+          ),
           // Aqui você pode adicionar outras opções como loading e erro, se necessário
         ),
       ),

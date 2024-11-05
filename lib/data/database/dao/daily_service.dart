@@ -50,7 +50,7 @@ class DailyPokemonService {
   Future<bool> releasePokemon(Pokemon pokemon) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      List<String>? capturedPokemons = prefs.getStringList('captured_pokemons');
+      List<String>? capturedPokemons = prefs.getStringList(_capturedPokemonKey); // Altere aqui para usar _capturedPokemonKey
 
       // Verifica se a lista de capturados existe
       if (capturedPokemons != null) {
@@ -62,7 +62,7 @@ class DailyPokemonService {
         });
 
         // Atualiza a lista no SharedPreferences
-        await prefs.setStringList('captured_pokemons', capturedPokemons);
+        await prefs.setStringList(_capturedPokemonKey, capturedPokemons); // Altere aqui para usar _capturedPokemonKey
       }
 
       return true; // Retorna true se a soltura foi bem-sucedida

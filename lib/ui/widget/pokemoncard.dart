@@ -4,8 +4,9 @@ import 'package:pokedex/ui/page/PokemonDetailPage.dart';
 
 class PokemonCard extends StatelessWidget {
   final Pokemon pokemon;
+  final VoidCallback onRelease; // Adiciona a variável para o callback
 
-  const PokemonCard({super.key, required this.pokemon});
+  const PokemonCard({super.key, required this.pokemon, required this.onRelease}); // Adiciona o parâmetro required
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,10 @@ class PokemonCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => PokemonDetailPage(pokemon: pokemon),
+            builder: (context) => PokemonDetailPage(
+              pokemon: pokemon,
+              onRelease: onRelease, // Passa o callback onRelease
+            ),
           ),
         );
       },
