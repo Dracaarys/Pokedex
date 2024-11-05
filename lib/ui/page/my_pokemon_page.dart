@@ -23,7 +23,6 @@ class _CapturedPokemonsPageState extends State<CapturedPokemonsPage> {
   }
 
   Future<void> _refreshCapturedPokemons() async {
-    // Atualiza a lista de Pokémon capturados
     setState(() {
       capturedPokemonsFuture = dailyPokemonService.getCapturedPokemon();
     });
@@ -35,43 +34,55 @@ class _CapturedPokemonsPageState extends State<CapturedPokemonsPage> {
       appBar: AppBar(
         title: const Text("Pokémons Capturados"),
       ),
-      body: FutureBuilder<List<Pokemon>>(
-        future: capturedPokemonsFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text("Erro ao carregar Pokémons capturados"));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text("Nenhum Pokémon capturado"));
-          } else {
-            final capturedPokemons = snapshot.data!;
-            return ListView.builder(
-              itemCount: capturedPokemons.length,
-              itemBuilder: (context, index) {
-                final pokemon = capturedPokemons[index];
-                return PokemonCard(
-                  pokemon: pokemon,
-                  onRelease: () async {
-                    // Quando o Pokémon for solto, atualiza a lista
-                    final success = await dailyPokemonService.releasePokemon(pokemon);
-                    if (success) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text("${pokemon.name} solto com sucesso!"),
-                      ));
-                      // Atualiza a lista de Pokémon capturados
-                      _refreshCapturedPokemons();
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text("Erro ao soltar ${pokemon.name}."),
-                      ));
-                    }
+      body: Stack(
+        children: [
+          // Imagem de fundo com opacidade baixa
+          Opacity(
+            opacity: 0.7,
+            child: Image.asset(
+              'images/poke.jpg',
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: double.infinity,
+            ),
+          ),
+          FutureBuilder<List<Pokemon>>(
+            future: capturedPokemonsFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return const Center(child: Text("Erro ao carregar Pokémons capturados"));
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const Center(child: Text("Nenhum Pokémon capturado"));
+              } else {
+                final capturedPokemons = snapshot.data!;
+                return ListView.builder(
+                  itemCount: capturedPokemons.length,
+                  itemBuilder: (context, index) {
+                    final pokemon = capturedPokemons[index];
+                    return PokemonCard(
+                      pokemon: pokemon,
+                      onRelease: () async {
+                        final success = await dailyPokemonService.releasePokemon(pokemon);
+                        if (success) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("${pokemon.name} solto com sucesso!"),
+                          ));
+                          _refreshCapturedPokemons();
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("Erro ao soltar ${pokemon.name}."),
+                          ));
+                        }
+                      },
+                    );
                   },
-                ); // Use seu card existente
-              },
-            );
-          }
-        },
+                );
+              }
+            },
+          ),
+        ],
       ),
     );
   }

@@ -34,7 +34,6 @@ class _DailyPokemonWidgetState extends State<DailyPokemonWidget> {
 
     final capturedPokemonList = await dailyPokemonService.getCapturedPokemon();
 
-    // Verifica se o Pokémon já foi capturado
     if (capturedPokemonList.any((p) => p.id == dailyPokemon!.id)) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("Você já capturou ${dailyPokemon!.name} antes."),
@@ -48,7 +47,7 @@ class _DailyPokemonWidgetState extends State<DailyPokemonWidget> {
         content: Text("${dailyPokemon!.name} capturado com sucesso!"),
       ));
       setState(() {
-        dailyPokemon = null; // Limpa o Pokémon atual
+        dailyPokemon = null;
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -59,46 +58,58 @@ class _DailyPokemonWidgetState extends State<DailyPokemonWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: dailyPokemon != null
-          ? Card(
-        elevation: 4,
-        margin: const EdgeInsets.all(32), // Aumente a margem do card
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+    return Stack(
+      children: [
+        // Imagem de fundo com opacidade baixa
+        Opacity(
+          opacity: 0.7,
+          child: Image.asset(
+            'images/poke.jpg',
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+          ),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Imagem do Pokémon
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Image.network(
-                _getImageUrl(dailyPokemon!.id),
-                height: 250, // Aumente a altura da imagem
-                width: 250,  // Aumente a largura da imagem
-                fit: BoxFit.cover,
-              ),
+        Center(
+          child: dailyPokemon != null
+              ? Card(
+            elevation: 4,
+            margin: const EdgeInsets.all(32),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
             ),
-            // Nome do Pokémon
-            Text(
-              dailyPokemon!.name,
-              style: TextStyle(
-                fontSize: 28, // Aumente o tamanho da fonte do nome
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).primaryColor,
-              ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Image.network(
+                    _getImageUrl(dailyPokemon!.id),
+                    height: 250,
+                    width: 250,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Text(
+                  dailyPokemon!.name,
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: _captureDailyPokemon,
+                  child: const Text("Capturar"),
+                ),
+                const SizedBox(height: 16),
+              ],
             ),
-            const SizedBox(height: 16), // espaço entre o nome e o botão
-            ElevatedButton(
-              onPressed: _captureDailyPokemon,
-              child: Text("Capturar"),
-            ),
-            const SizedBox(height: 16), // espaço inferior
-          ],
+          )
+              : const SizedBox.shrink(),
         ),
-      )
-          : SizedBox.shrink(),
+      ],
     );
   }
 
