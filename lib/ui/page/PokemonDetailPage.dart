@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:pokedex/data/database/entity/pokemon_database_entity.dart';
 import 'package:pokedex/data/database/dao/daily_service.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 
 class PokemonDetailPage extends StatefulWidget {
   final Pokemon pokemon;
@@ -33,10 +34,15 @@ class _PokemonDetailPageState extends State<PokemonDetailPage> {
     });
   }
 
+  String _getImageUrl(int id) {
+    final formattedId = id.toString().padLeft(3, '0');
+    return 'https://github.com/fanzeyi/pokemon.json/raw/master/thumbnails/$formattedId.png';
+  }
+
   @override
   Widget build(BuildContext context) {
     final formattedId = widget.pokemon.id.toString().padLeft(3, '0');
-    final imageUrl = 'https://github.com/fanzeyi/pokemon.json/raw/master/thumbnails/$formattedId.png';
+    final imageUrl = _getImageUrl(widget.pokemon.id);
 
     return Scaffold(
       appBar: AppBar(
@@ -45,7 +51,6 @@ class _PokemonDetailPageState extends State<PokemonDetailPage> {
       ),
       body: Stack(
         children: [
-
           Opacity(
             opacity: 0.7, // Ajuste a opacidade para o efeito de marca d'água
             child: Image.asset(
@@ -97,19 +102,37 @@ class _PokemonDetailPageState extends State<PokemonDetailPage> {
                 const SizedBox(height: 16),
                 if (_isCaptured)
                   ElevatedButton(
-                    onPressed: () async {
-                      final success = await DailyPokemonService().releasePokemon(widget.pokemon);
-                      if (success) {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text("${widget.pokemon.name} solto com sucesso!"),
-                        ));
-                        widget.onRelease();
-                        Navigator.pop(context);
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text("Erro ao soltar ${widget.pokemon.name}."),
-                        ));
-                      }
+                    onPressed: () {
+                      AwesomeDialog(
+                        context: context,
+                        dialogType: DialogType.warning,
+                        animType: AnimType.scale,
+                        title: 'Confirmar',
+                        desc: 'Tem certeza de que deseja soltar ${widget.pokemon.name}?',
+
+                        customHeader: Container(
+                          margin: const EdgeInsets.only(bottom: 16.0), // Espaço abaixo da imagem
+                          child: CircleAvatar(
+                            radius: 50, // Ajuste o tamanho do círculo
+                            backgroundImage: NetworkImage(imageUrl), // URL da imagem
+                          ),
+                        ),
+                        btnCancelOnPress: () {},
+                        btnOkOnPress: () async {
+                          final success = await DailyPokemonService().releasePokemon(widget.pokemon);
+                          if (success) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text("${widget.pokemon.name} solto com sucesso!"),
+                            ));
+                            widget.onRelease();
+                            Navigator.pop(context);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text("Erro ao soltar ${widget.pokemon.name}."),
+                            ));
+                          }
+                        },
+                      ).show();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.redAccent,
