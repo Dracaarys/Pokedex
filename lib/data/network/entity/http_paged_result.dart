@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:pokedex/data/database/entity/pokemon_database_entity.dart';
 
-part 'http_paged_result.g.dart'; // Certifique-se de gerar este arquivo
+part 'http_paged_result.g.dart';
 
 @JsonSerializable()
 class HttpPagedResult {
@@ -31,7 +31,7 @@ class HttpPagedResult {
 @JsonSerializable()
 class PokeEntity {
   dynamic id;
-  String name; // Mude o tipo de Name para String
+  String name;
   List<String> type;
   Base base;
 

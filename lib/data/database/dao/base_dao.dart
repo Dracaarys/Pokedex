@@ -26,7 +26,7 @@ abstract class BaseDao {
       version: databaseVersion,
     );
   }
-
+    //criação do banco
   void _createPokemonTableV1(Batch batch) {
     batch.execute(
       '''

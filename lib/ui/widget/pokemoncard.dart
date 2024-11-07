@@ -1,29 +1,27 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:pokedex/data/database/entity/pokemon_database_entity.dart';
 import 'package:pokedex/ui/page/PokemonDetailPage.dart';
 
 class PokemonCard extends StatelessWidget {
   final Pokemon pokemon;
-  final VoidCallback onRelease; // Adiciona a variável para o callback
+  final VoidCallback onRelease;
 
-  const PokemonCard({super.key, required this.pokemon, required this.onRelease}); // Adiciona o parâmetro required
+  const PokemonCard({super.key, required this.pokemon, required this.onRelease});
 
   @override
   Widget build(BuildContext context) {
-    // Formata o ID do Pokémon para ter três dígitos
     final formattedId = pokemon.id.toString().padLeft(3, '0');
-    // URL da imagem
     final imageUrl = 'https://github.com/fanzeyi/pokemon.json/raw/master/thumbnails/$formattedId.png';
 
     return GestureDetector(
       onTap: () {
-        // Navega para a página de detalhes do Pokémon
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => PokemonDetailPage(
               pokemon: pokemon,
-              onRelease: onRelease, // Passa o callback onRelease
+              onRelease: onRelease,
             ),
           ),
         );
@@ -35,11 +33,13 @@ class PokemonCard extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Image.network(
-                imageUrl,
+              CachedNetworkImage(
+                imageUrl: imageUrl,
                 width: 60,
                 height: 60,
                 fit: BoxFit.cover,
+                placeholder: (context, url) => CircularProgressIndicator(),
+                errorWidget: (context, url, error) => Icon(Icons.error),
               ),
               const SizedBox(width: 8),
               Expanded(

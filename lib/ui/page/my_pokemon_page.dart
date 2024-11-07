@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pokedex/data/database/dao/daily_service.dart';
 import 'package:pokedex/data/database/entity/pokemon_database_entity.dart';
 import 'package:pokedex/ui/widget/pokemoncard.dart';
-import 'package:pokedex/ui/page/PokemonDetailPage.dart';
+
 
 class CapturedPokemonsPage extends StatefulWidget {
   const CapturedPokemonsPage({Key? key}) : super(key: key);
