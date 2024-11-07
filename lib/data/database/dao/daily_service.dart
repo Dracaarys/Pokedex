@@ -13,7 +13,7 @@ class DailyPokemonService {
     final now = DateTime.now();
     final lastUpdate = DateTime.tryParse(prefs.getString(_lastUpdateTimeKey) ?? '') ?? DateTime(1970);
 
-    if (now.difference(lastUpdate).inSeconds >= 30) {
+    if (now.difference(lastUpdate).inSeconds >= 20) {
       final randomPokemon = pokemonList[Random().nextInt(pokemonList.length)];
 
       // Convertendo o Pokémon em JSON string antes de salvar

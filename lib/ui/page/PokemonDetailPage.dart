@@ -96,6 +96,12 @@ class _PokemonDetailPageState extends State<PokemonDetailPage> {
                       _buildStatRow('Speed', widget.pokemon.base.speed, Colors.orange),
                       _buildStatRow('SpAttack', widget.pokemon.base.spAttack, Colors.purple),
                       _buildStatRow('SpDefense', widget.pokemon.base.spDefense, Colors.teal),
+                      const SizedBox(height: 16),
+
+                      Text(
+                        'tipo: ${widget.pokemon.type}',
+                        style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
+                      ),
                     ],
                   ),
                 ),

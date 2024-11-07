@@ -26,7 +26,7 @@ class _DailyPokemonPageState extends State<DailyPokemonPage> {
   Future<void> _loadPokemons() async {
     try {
       // Carrega um número limitado de Pokémon (exemplo: 20) para escolher um aleatório
-      final pokemons = await pokeRepo.getPokemon(page: 1, limit: 20);
+      final pokemons = await pokeRepo.getPokemon(page: 1, limit: 400);
       setState(() {
         pokemonList = pokemons;
       });
